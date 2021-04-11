@@ -1,0 +1,15 @@
+{
+  "name": "kaboom-breakout",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.1.5"
+  },
+  "dependencies": {
+    "kontra": "^7.1.3"
+  }
+}
