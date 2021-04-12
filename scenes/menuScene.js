@@ -3,8 +3,6 @@ import { Button, Text, Grid, Scene, getCanvas, emit } from 'kontra'
 export function createMenuScene() {
   const canvas = getCanvas()
 
-  console.log(window)
-
   let title = Text({
     text: document.title,
     x: canvas.width / 2,
@@ -19,14 +17,14 @@ export function createMenuScene() {
     y: 100,
     anchor: { x: 0.5, y: 0.5 },
     text: {
-      text: 'Tap to Start',
+      text: 'Hold finger down to start',
       color: '#bada55',
       font: '32px sans-serif',
       anchor: { x: 0.5, y: 0.5 },
     },
     padX: canvas.width / 2,
     padY: canvas.height / 2,
-    onUp: function () {
+    onDown: function () {
       emit('navigate', 'game')
     },
   })
