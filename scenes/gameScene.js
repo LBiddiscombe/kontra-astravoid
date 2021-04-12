@@ -1,4 +1,17 @@
-import { Scene, Sprite, SpriteSheet, Pool, getCanvas, load, imageAssets, setImagePath } from 'kontra'
+import {
+  Scene,
+  Sprite,
+  SpriteSheet,
+  Pool,
+  getCanvas,
+  load,
+  imageAssets,
+  setImagePath,
+  onPointerUp,
+  emit,
+  track,
+  untrack,
+} from 'kontra'
 
 export function createGameScene() {
   const canvas = getCanvas()
@@ -8,9 +21,24 @@ export function createGameScene() {
   let frequency = 1
   let asteroids = []
 
-  function sample(array) {
-    return array[Math.floor(Math.random() * array.length)]
+  let stars = Pool({
+    create: Sprite,
+  })
+
+  for (let i = 0; i < 1000; i++) {
+    stars.get({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      width: Math.random() * 2,
+      height: Math.random() * 2,
+      color: 'white',
+    })
   }
+
+  onPointerUp(function () {
+    asteroids.forEach((asteroid) => untrack(asteroid))
+    emit('navigate', 'gameOver')
+  })
 
   setImagePath('/assets')
   load('asteroid_spritesheet.png').then(() => {
@@ -46,6 +74,16 @@ export function createGameScene() {
       dy: Math.random() * 6 + 2,
       animations: spriteSheet.animations,
       ttl: Infinity,
+      collidesWithPointer: function (pointer) {
+        // perform a circle v circle collision test
+        let dx = pointer.x - this.x
+        let dy = pointer.y - this.y
+        return Math.sqrt(dx * dx + dy * dy) < (this.width * this.scaleX) / 2
+      },
+      onOver: function () {
+        asteroids.forEach((asteroid) => untrack(asteroid))
+        emit('navigate', 'gameOver')
+      },
       update: function () {
         this.advance()
         if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width)
@@ -54,6 +92,9 @@ export function createGameScene() {
     })
     asteroid.playAnimation(sample(['spin', 'spin2']))
     asteroids.push(asteroid)
+    track(asteroid)
+    const deadAsteroids = asteroids.filter((a) => a.ttl <= 0)
+    deadAsteroids.forEach((asteroid) => untrack(asteroid))
     asteroids = asteroids.filter((a) => a.ttl > 0)
     scene.children = asteroids
   }
@@ -71,7 +112,14 @@ export function createGameScene() {
         frequency = Math.max(frequency - Math.random() / 50, minFrequency)
       }
     },
+    render: function () {
+      stars.render()
+    },
   })
 
   return scene
+}
+
+function sample(array) {
+  return array[Math.floor(Math.random() * array.length)]
 }
