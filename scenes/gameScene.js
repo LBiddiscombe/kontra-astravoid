@@ -4,6 +4,7 @@ import {
   Pool,
   SpriteSheet,
   getCanvas,
+  getContext,
   getPointer,
   load,
   imageAssets,
@@ -22,10 +23,13 @@ export function createGameScene() {
   const canvas = getCanvas()
   const pointer = getPointer()
   const stars = createStars()
+  const context = getContext()
   const minFrequency = 0.2
   let spriteSheet
   let frequency = 1
   let asteroids = []
+
+  const showCollisionBoxes = true
 
   let score = Text({
     value: 0,
@@ -82,24 +86,17 @@ export function createGameScene() {
         if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {
           this.ttl = 0
         }
-
-        trail.get({
-          x: pointer.x,
-          y: pointer.y,
-          radius: 20,
-          color: 'yellow',
-          ttl: 30,
-          render: function () {
-            this.context.fillStyle = this.color
-            this.context.beginPath()
-            this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
-            this.context.fill()
-          },
-          update: function () {
-            this.advance()
-            this.opacity = this.ttl / 1200
-          },
-        })
+      },
+      render: function () {
+        this.draw()
+        if (showCollisionBoxes) {
+          context.save()
+          context.strokeStyle = 'red'
+          context.beginPath()
+          context.arc(this.width / 2, this.height / 2, this.width / 2.5, 0, 2 * Math.PI)
+          context.stroke()
+          context.restore()
+        }
       },
     })
     asteroid.playAnimation(sample(['spin', 'spin2']))
@@ -117,6 +114,7 @@ export function createGameScene() {
   }
 
   onPointerUp(function () {
+    console.log('pointer up')
     youLose()
   })
 
@@ -137,17 +135,38 @@ export function createGameScene() {
       score.value += 1
       score.text = 'Score: ' + score.value
 
+      // show a trail for pointer
+      trail.get({
+        x: pointer.x,
+        y: pointer.y,
+        radius: 20,
+        color: 'yellow',
+        ttl: 30,
+        render: function () {
+          this.context.fillStyle = this.color
+          this.context.beginPath()
+          this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
+          this.context.fill()
+        },
+        update: function () {
+          this.advance()
+          this.opacity = this.ttl / 240
+          this.radius = (this.ttl / 30) * 20
+        },
+      })
+      trail.update()
+
       // check if pointer collides with sprite
       asteroids.forEach((asteroid) => {
         const x = pointer.x - asteroid.x
-        const y = asteroid.y - pointer.y
-        const radii = (asteroid.width * asteroid.scaleX) / 2 + 20
+        const y = pointer.y - asteroid.y
+        const radii = (asteroid.width * asteroid.scaleX) / 2.5 + 20
         if (x * x + y * y <= radii * radii) {
+          console.log(x, y, radii, asteroid)
+          console.log('collision')
           youLose()
         }
       })
-
-      trail.update()
     },
     render: function () {
       stars.render()
