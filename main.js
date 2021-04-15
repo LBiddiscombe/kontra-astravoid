@@ -1,5 +1,5 @@
 import './style.css'
-import { init, initPointer, getPointer, on, GameLoop, untrack } from 'kontra'
+import { init, initPointer, on, GameLoop } from 'kontra'
 import { createMenuScene } from './scenes/menuScene'
 import { createGameScene } from './scenes/gameScene'
 import { createGameOverScene } from './scenes/gameOverScene'
