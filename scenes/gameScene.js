@@ -1,42 +1,34 @@
 import {
   Scene,
   Sprite,
-  SpriteSheet,
   Pool,
+  SpriteSheet,
   getCanvas,
+  getPointer,
   load,
   imageAssets,
   setImagePath,
   onPointerUp,
   emit,
-  track,
-  untrack,
+  degToRad,
+  randInt,
 } from 'kontra'
+import { createStars } from '../objects/stars'
 
 export function createGameScene() {
   const canvas = getCanvas()
-
+  const pointer = getPointer()
+  const stars = createStars()
   const minFrequency = 0.2
   let spriteSheet
   let frequency = 1
   let asteroids = []
 
-  let stars = Pool({
+  let trail = Pool({
     create: Sprite,
   })
 
-  for (let i = 0; i < 1000; i++) {
-    stars.get({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      width: Math.random() * 2,
-      height: Math.random() * 2,
-      color: 'white',
-    })
-  }
-
   onPointerUp(function () {
-    asteroids.forEach((asteroid) => untrack(asteroid))
     emit('navigate', 'gameOver')
   })
 
@@ -68,33 +60,43 @@ export function createGameScene() {
       y: -50,
       anchor: { x: 0.5, y: 0.5 },
       rotation: Math.random() * 2 - Math.random() * 2,
+      angle: randInt(70, 110),
+      speed: Math.random() * 8 + 2,
       scaleX: scale,
       scaleY: scale,
-      dx: Math.random() * 2 - Math.random() * 2,
-      dy: Math.random() * 6 + 2,
       animations: spriteSheet.animations,
       ttl: Infinity,
-      collidesWithPointer: function (pointer) {
-        // perform a circle v circle collision test
-        let dx = pointer.x - this.x
-        let dy = pointer.y - this.y
-        return Math.sqrt(dx * dx + dy * dy) < (this.width * this.scaleX) / 2
-      },
-      onOver: function () {
-        asteroids.forEach((asteroid) => untrack(asteroid))
-        emit('navigate', 'gameOver')
-      },
       update: function () {
+        // set dx and dy based on angle and speed (velocity)
+        const angleRadians = degToRad(this.angle)
+        this.dx = Math.cos(angleRadians) * this.speed
+        this.dy = Math.sin(angleRadians) * this.speed
         this.advance()
-        if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width)
+        if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {
           this.ttl = 0
+        }
+
+        trail.get({
+          x: pointer.x,
+          y: pointer.y,
+          radius: 20,
+          color: 'yellow',
+          ttl: 30,
+          render: function () {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
+            this.context.fill()
+          },
+          update: function () {
+            this.advance()
+            this.opacity = this.ttl / 1200
+          },
+        })
       },
     })
     asteroid.playAnimation(sample(['spin', 'spin2']))
     asteroids.push(asteroid)
-    track(asteroid)
-    const deadAsteroids = asteroids.filter((a) => a.ttl <= 0)
-    deadAsteroids.forEach((asteroid) => untrack(asteroid))
     asteroids = asteroids.filter((a) => a.ttl > 0)
     scene.children = asteroids
   }
@@ -111,9 +113,22 @@ export function createGameScene() {
         this.timer = 0
         frequency = Math.max(frequency - Math.random() / 50, minFrequency)
       }
+
+      // check if pointer collides with sprite
+      asteroids.forEach((asteroid) => {
+        const x = pointer.x - asteroid.x
+        const y = asteroid.y - pointer.y
+        const radii = (asteroid.width * asteroid.scaleX) / 2 + 20
+        if (x * x + y * y <= radii * radii) {
+          emit('navigate', 'gameOver')
+        }
+      })
+
+      trail.update()
     },
     render: function () {
       stars.render()
+      trail.render()
     },
   })
 

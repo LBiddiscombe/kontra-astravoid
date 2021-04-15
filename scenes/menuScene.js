@@ -1,7 +1,9 @@
 import { Button, Text, Grid, Scene, getCanvas, emit } from 'kontra'
+import { createStars } from '../objects/stars'
 
 export function createMenuScene() {
   const canvas = getCanvas()
+  const stars = createStars()
 
   let title = Text({
     text: document.title,
@@ -41,5 +43,8 @@ export function createMenuScene() {
   return Scene({
     id: 'menu',
     children: [title, menu],
+    render: function () {
+      stars.render()
+    },
   })
 }

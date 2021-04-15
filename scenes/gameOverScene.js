@@ -1,7 +1,9 @@
 import { Text, Grid, Scene, getCanvas, emit } from 'kontra'
+import { createStars } from '../objects/stars'
 
 export function createGameOverScene() {
   const canvas = getCanvas()
+  const stars = createStars()
 
   let lose = Text({
     text: 'Game Over',
@@ -25,6 +27,9 @@ export function createGameOverScene() {
       setTimeout(() => {
         emit('navigate', 'menu')
       }, 2000)
+    },
+    render: function () {
+      stars.render()
     },
   })
 }
