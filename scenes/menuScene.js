@@ -5,12 +5,6 @@ export function createMenuScene() {
   const canvas = getCanvas()
   const stars = createStars()
 
-  let hiscore = Text({
-    text: 'Hi Score',
-    color: 'white',
-    font: '24px sans-serif',
-  })
-
   let title = Text({
     text: document.title,
     x: canvas.width / 2,
@@ -27,13 +21,19 @@ export function createMenuScene() {
     anchor: { x: 0.5, y: 0.5 },
   })
 
+  let scores = Text({
+    text: 'Last Score',
+    color: 'yellow',
+    font: '24px sans-serif',
+  })
+
   let menu = Grid({
     x: canvas.width / 2,
     y: canvas.height / 2,
     anchor: { x: 0.5, y: 0.5 },
     rowGap: 64,
     justify: 'center',
-    children: [tapToStart, hiscore],
+    children: [tapToStart, scores],
   })
 
   onPointerDown(function () {
@@ -47,7 +47,7 @@ export function createMenuScene() {
       stars.render()
     },
     onShow: function () {
-      hiscore.text = `Hi-Score: ${getStoreItem('hiscore') || 0}`
+      scores.text = `Last Score: ${getStoreItem('score') || 0}\nHi-Score: ${getStoreItem('hiscore') || 0}`
     },
   })
 }
