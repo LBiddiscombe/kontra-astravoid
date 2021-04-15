@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Scene, getCanvas, emit, getStoreItem, onPointerDown } from 'kontra'
+import { Text, Grid, Scene, getCanvas, emit, getStoreItem, onPointerDown } from 'kontra'
 import { createStars } from '../objects/stars'
 
 export function createMenuScene() {
@@ -16,7 +16,7 @@ export function createMenuScene() {
     x: canvas.width / 2,
     y: 50,
     color: 'white',
-    font: '32px sans-serif',
+    font: '48px sans-serif',
     anchor: { x: 0.5, y: 0.5 },
   })
 
