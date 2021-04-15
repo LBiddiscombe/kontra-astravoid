@@ -1,9 +1,15 @@
-import { Button, Text, Grid, Scene, getCanvas, emit } from 'kontra'
+import { Button, Text, Grid, Scene, getCanvas, emit, getStoreItem, onPointerDown } from 'kontra'
 import { createStars } from '../objects/stars'
 
 export function createMenuScene() {
   const canvas = getCanvas()
   const stars = createStars()
+
+  let hiscore = Text({
+    text: 'Hi Score',
+    color: 'white',
+    font: '24px sans-serif',
+  })
 
   let title = Text({
     text: document.title,
@@ -14,30 +20,24 @@ export function createMenuScene() {
     anchor: { x: 0.5, y: 0.5 },
   })
 
-  let button = Button({
-    x: 300,
-    y: 100,
+  let tapToStart = Text({
+    text: 'Hold finger down to start',
+    color: '#bada55',
+    font: '32px sans-serif',
     anchor: { x: 0.5, y: 0.5 },
-    text: {
-      text: 'Hold finger down to start',
-      color: '#bada55',
-      font: '32px sans-serif',
-      anchor: { x: 0.5, y: 0.5 },
-    },
-    padX: canvas.width / 2,
-    padY: canvas.height / 2,
-    onDown: function () {
-      emit('navigate', 'game')
-    },
   })
 
   let menu = Grid({
     x: canvas.width / 2,
     y: canvas.height / 2,
     anchor: { x: 0.5, y: 0.5 },
-    rowGap: 15,
+    rowGap: 64,
     justify: 'center',
-    children: [button],
+    children: [tapToStart, hiscore],
+  })
+
+  onPointerDown(function () {
+    emit('navigate', 'game')
   })
 
   return Scene({
@@ -45,6 +45,9 @@ export function createMenuScene() {
     children: [title, menu],
     render: function () {
       stars.render()
+    },
+    onShow: function () {
+      hiscore.text = `Hi-Score: ${getStoreItem('hiscore') || 0}`
     },
   })
 }

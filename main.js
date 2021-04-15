@@ -18,6 +18,7 @@ initPointer()
 const menuScene = createMenuScene()
 const gameOverScene = createGameOverScene()
 let currentScene = menuScene
+currentScene.show()
 
 on('navigate', (name) => {
   switch (name) {

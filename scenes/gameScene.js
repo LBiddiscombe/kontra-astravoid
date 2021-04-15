@@ -12,6 +12,9 @@ import {
   emit,
   degToRad,
   randInt,
+  Text,
+  setStoreItem,
+  getStoreItem,
 } from 'kontra'
 import { createStars } from '../objects/stars'
 
@@ -24,12 +27,16 @@ export function createGameScene() {
   let frequency = 1
   let asteroids = []
 
-  let trail = Pool({
-    create: Sprite,
+  let score = Text({
+    value: 0,
+    x: 10,
+    y: 10,
+    color: 'white',
+    font: '32px sans-serif',
   })
 
-  onPointerUp(function () {
-    emit('navigate', 'gameOver')
+  let trail = Pool({
+    create: Sprite,
   })
 
   setImagePath('/assets')
@@ -101,6 +108,18 @@ export function createGameScene() {
     scene.children = asteroids
   }
 
+  function youLose() {
+    setStoreItem('score', score.value)
+    if (score.value > getStoreItem('hiscore')) {
+      setStoreItem('hiscore', score.value)
+    }
+    emit('navigate', 'gameOver')
+  }
+
+  onPointerUp(function () {
+    youLose()
+  })
+
   let scene = Scene({
     id: 'game',
     cullObjects: false,
@@ -114,13 +133,17 @@ export function createGameScene() {
         frequency = Math.max(frequency - Math.random() / 50, minFrequency)
       }
 
+      // update score
+      score.value += 1
+      score.text = 'Score: ' + score.value
+
       // check if pointer collides with sprite
       asteroids.forEach((asteroid) => {
         const x = pointer.x - asteroid.x
         const y = asteroid.y - pointer.y
         const radii = (asteroid.width * asteroid.scaleX) / 2 + 20
         if (x * x + y * y <= radii * radii) {
-          emit('navigate', 'gameOver')
+          youLose()
         }
       })
 
@@ -129,6 +152,7 @@ export function createGameScene() {
     render: function () {
       stars.render()
       trail.render()
+      score.render()
     },
   })
 

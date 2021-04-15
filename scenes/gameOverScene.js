@@ -1,4 +1,4 @@
-import { Text, Grid, Scene, getCanvas, emit } from 'kontra'
+import { Text, Grid, Scene, getCanvas, emit, getStoreItem } from 'kontra'
 import { createStars } from '../objects/stars'
 
 export function createGameOverScene() {
@@ -11,19 +11,33 @@ export function createGameOverScene() {
     font: '32px sans-serif',
   })
 
+  let score = Text({
+    text: '',
+    color: '#bada55',
+    font: '32px sans-serif',
+  })
+
+  let hiscore = Text({
+    text: '',
+    color: '#bada55',
+    font: '16px sans-serif',
+  })
+
   let loseGrid = Grid({
     x: canvas.width / 2,
     y: canvas.height / 2,
     anchor: { x: 0.5, y: 0.5 },
-    rowGap: 15,
+    rowGap: 64,
     justify: 'center',
-    children: [lose],
+    children: [lose, score, hiscore],
   })
 
   return Scene({
     id: 'gameOver',
     children: [loseGrid],
     onShow: function () {
+      score.text = `Score: ${getStoreItem('score')}`
+      hiscore.text = `Hi-Score: ${getStoreItem('hiscore')}`
       setTimeout(() => {
         emit('navigate', 'menu')
       }, 2000)
