@@ -4,7 +4,6 @@ import {
   Pool,
   SpriteSheet,
   getCanvas,
-  getContext,
   getPointer,
   load,
   imageAssets,
@@ -20,16 +19,17 @@ import {
 import { createStars } from '../objects/stars'
 
 export function createGameScene() {
+  const showCollisionBoxes = true
   const canvas = getCanvas()
   const pointer = getPointer()
   const stars = createStars()
-  const context = getContext()
   const minFrequency = 0.2
   let spriteSheet
   let frequency = 1
   let asteroids = []
+  let collisionBoxes = []
 
-  const showCollisionBoxes = true
+  setImagePath('/assets')
 
   let score = Text({
     value: 0,
@@ -43,7 +43,6 @@ export function createGameScene() {
     create: Sprite,
   })
 
-  setImagePath('/assets')
   load('asteroid_spritesheet.png').then(() => {
     spriteSheet = SpriteSheet({
       image: imageAssets['asteroid_spritesheet'],
@@ -65,16 +64,17 @@ export function createGameScene() {
   })
 
   function addAsteroid(spriteSheet) {
-    const scale = Math.random() * 1 + 0.25
+    const radius = randInt(16, canvas.width / 8)
     const asteroid = Sprite({
       x: Math.random() * canvas.width,
-      y: -50,
+      y: -radius,
+      radius: radius,
+      width: radius * 2,
+      height: radius * 2,
       anchor: { x: 0.5, y: 0.5 },
       rotation: Math.random() * 2 - Math.random() * 2,
       angle: randInt(70, 110),
       speed: Math.random() * 8 + 2,
-      scaleX: scale,
-      scaleY: scale,
       animations: spriteSheet.animations,
       ttl: Infinity,
       update: function () {
@@ -85,17 +85,6 @@ export function createGameScene() {
         this.advance()
         if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {
           this.ttl = 0
-        }
-      },
-      render: function () {
-        this.draw()
-        if (showCollisionBoxes) {
-          context.save()
-          context.strokeStyle = 'red'
-          context.beginPath()
-          context.arc(this.width / 2, this.height / 2, this.width / 2.5, 0, 2 * Math.PI)
-          context.stroke()
-          context.restore()
         }
       },
     })
@@ -114,7 +103,6 @@ export function createGameScene() {
   }
 
   onPointerUp(function () {
-    console.log('pointer up')
     youLose()
   })
 
@@ -124,6 +112,13 @@ export function createGameScene() {
     timer: 0,
     update: function () {
       this.advance()
+      // check if pointer collides with sprite
+      collisionBoxes = []
+      asteroids.forEach((asteroid) => {
+        if (checkCollision(asteroid, pointer)) {
+          youLose()
+        }
+      })
       this.timer += 1 / 60
       if (this.timer > frequency) {
         addAsteroid(spriteSheet)
@@ -155,29 +150,54 @@ export function createGameScene() {
         },
       })
       trail.update()
-
-      // check if pointer collides with sprite
-      asteroids.forEach((asteroid) => {
-        const x = pointer.x - asteroid.x
-        const y = pointer.y - asteroid.y
-        const radii = (asteroid.width * asteroid.scaleX) / 2.5 + 20
-        if (x * x + y * y <= radii * radii) {
-          console.log(x, y, radii, asteroid)
-          console.log('collision')
-          youLose()
-        }
-      })
     },
     render: function () {
       stars.render()
       trail.render()
       score.render()
+      if (showCollisionBoxes) {
+        addCollisionBox(pointer.x, pointer.y, 20)
+        collisionBoxes.forEach((collisionBox) => {
+          collisionBox.render()
+        })
+      }
     },
   })
 
-  return scene
-}
+  const addCollisionBox = (x, y, r) => {
+    const box = Sprite({
+      x: x,
+      y: y,
+      r: r,
+      render: function () {
+        this.context.strokeStyle = 'red'
+        this.context.lineWidth = 2
+        this.context.beginPath()
+        this.context.arc(0, 0, r, 0, 2 * Math.PI)
+        this.context.stroke()
+      },
+    })
+    collisionBoxes.push(box)
+  }
 
-function sample(array) {
-  return array[Math.floor(Math.random() * array.length)]
+  function checkCollision(asteroid, pointer) {
+    const asteroidX = asteroid.x + asteroid.dx
+    const asteroidY = asteroid.y + asteroid.dy
+    const asteroidRadius = asteroid.radius * 0.75
+    const distX = pointer.x - asteroid.x
+    const distY = pointer.y - asteroid.y
+    const radii = asteroidRadius + 20
+
+    if (showCollisionBoxes) {
+      addCollisionBox(asteroidX, asteroidY, asteroidRadius)
+    }
+
+    return distX * distX + distY * distY <= radii * radii
+  }
+
+  function sample(array) {
+    return array[Math.floor(Math.random() * array.length)]
+  }
+
+  return scene
 }
