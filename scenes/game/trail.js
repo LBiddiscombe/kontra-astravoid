@@ -19,7 +19,6 @@ function addToTrail(pointer) {
       this.advance()
       this.width = this.height
       this.opacity = this.ttl / 60
-      //this.height = (1 / this.ttl) * 20 // / 30) * 20
     },
   })
 }
