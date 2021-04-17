@@ -21,6 +21,13 @@ export function createMenuScene() {
     anchor: { x: 0.5, y: 0.5 },
   })
 
+  let instructions = Text({
+    text: "Hold finger down. Don't lift. Avoid the asteroids. Done.",
+    color: 'lightgrey',
+    font: '16px sans-serif',
+    anchor: { x: 0.5, y: 0.5 },
+  })
+
   let scores = Text({
     text: 'Last Score',
     color: 'yellow',
@@ -31,9 +38,9 @@ export function createMenuScene() {
     x: canvas.width / 2,
     y: canvas.height / 2,
     anchor: { x: 0.5, y: 0.5 },
-    rowGap: 64,
+    rowGap: [16, 64],
     justify: 'center',
-    children: [tapToStart, scores],
+    children: [tapToStart, instructions, scores],
   })
 
   onPointerDown(function () {
