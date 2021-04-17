@@ -6,16 +6,12 @@ let asteroids = []
 
 const loadSpriteSheet = () => {
   spriteSheet = SpriteSheet({
-    image: imageAssets['asteroid_spritesheet'],
+    image: imageAssets['asteroid1Spritesheet'],
     frameWidth: 128,
     frameHeight: 128,
     animations: {
       spin: {
-        frames: '1..31',
-        frameRate: 32,
-      },
-      spin2: {
-        frames: '32..63',
+        frames: '1..15',
         frameRate: 32,
       },
     },
@@ -65,7 +61,6 @@ export function addAsteroid() {
       }
     },
   })
-  asteroid.playAnimation(sample(['spin', 'spin2']))
   asteroids.push(asteroid)
   asteroids = asteroids.filter((a) => a.ttl > 0)
 }

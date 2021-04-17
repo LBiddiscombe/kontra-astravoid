@@ -2,7 +2,7 @@ import { getCanvas, Sprite, Text, Grid, Scene, load, setImagePath, on, emit } fr
 
 export function createBootScene() {
   const canvas = getCanvas()
-  let assets = ['asteroid_spritesheet.png']
+  let assets = ['asteroid1Spritesheet.png']
 
   setImagePath('/assets')
 
@@ -21,7 +21,6 @@ export function createBootScene() {
     render() {
       this.context.strokeStyle = 'white'
       this.context.strokeRect(0, 0, this.width, this.height)
-
       this.context.fillStyle = 'green'
       this.context.fillRect(1, 1, this.width * (this.progress / assets.length) - 2, this.height - 2)
     },
