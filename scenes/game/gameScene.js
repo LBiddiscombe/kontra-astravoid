@@ -1,8 +1,9 @@
-import { Scene, Sprite, Pool, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
+import { Scene, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
 import { createStars } from '../../objects/stars'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
+import { addToTrail, trail } from './trail'
 
 export function createGameScene() {
   const pointer = getPointer()
@@ -15,10 +16,6 @@ export function createGameScene() {
     y: 10,
     color: 'white',
     font: '32px sans-serif',
-  })
-
-  let trail = Pool({
-    create: Sprite,
   })
 
   function youLose() {
@@ -39,6 +36,7 @@ export function createGameScene() {
     timer: 0,
     onShow: function () {
       clearAsteroids()
+      trail.clear()
     },
     update: function () {
       this.advance()
@@ -61,25 +59,7 @@ export function createGameScene() {
       scoreUI.value += 1
       scoreUI.text = 'Score: ' + scoreUI.value
 
-      // show a trail for pointer
-      trail.get({
-        x: pointer.x,
-        y: pointer.y,
-        radius: 20,
-        color: 'yellow',
-        ttl: 30,
-        render: function () {
-          this.context.fillStyle = this.color
-          this.context.beginPath()
-          this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
-          this.context.fill()
-        },
-        update: function () {
-          this.advance()
-          this.opacity = this.ttl / 240
-          this.radius = (this.ttl / 30) * 20
-        },
-      })
+      addToTrail(pointer)
       trail.update()
     },
     render: function () {
