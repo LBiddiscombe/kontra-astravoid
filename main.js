@@ -4,6 +4,7 @@ import { createBootScene } from './scenes/bootScene'
 import { createMenuScene } from './scenes/menuScene'
 import { createGameScene } from './scenes/game/gameScene'
 import { createGameOverScene } from './scenes/gameOverScene'
+import { createStars } from './shared/stars'
 
 // #region Canvas
 const { canvas } = init()
@@ -16,6 +17,7 @@ initPointer()
 // #endregion
 
 // #region Scenes
+const stars = createStars()
 const bootScene = createBootScene()
 let currentScene = bootScene
 currentScene.show()
@@ -45,6 +47,7 @@ let loop = GameLoop({
     currentScene.update()
   },
   render: function () {
+    stars.render()
     currentScene.render()
   },
 })

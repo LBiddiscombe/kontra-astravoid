@@ -1,9 +1,7 @@
 import { Text, Grid, Scene, getCanvas, emit, getStoreItem, onPointerDown } from 'kontra'
-import { createStars } from '../objects/stars'
 
 export function createMenuScene() {
   const canvas = getCanvas()
-  const stars = createStars()
 
   let title = Text({
     text: document.title,
@@ -50,9 +48,6 @@ export function createMenuScene() {
   return Scene({
     id: 'menu',
     children: [title, menu],
-    render: function () {
-      stars.render()
-    },
     onShow: function () {
       scores.text = `Last Score: ${getStoreItem('score') || 0}\nHi-Score: ${getStoreItem('hiscore') || 0}`
     },

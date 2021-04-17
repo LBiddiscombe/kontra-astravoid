@@ -1,5 +1,4 @@
 import { Scene, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
-import { createStars } from '../../objects/stars'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
@@ -7,7 +6,6 @@ import { addToTrail, trail } from './trail'
 
 export function createGameScene() {
   const pointer = getPointer()
-  const stars = createStars()
   let asteroidFrequency = 1
 
   let scoreUI = Text({
@@ -63,7 +61,6 @@ export function createGameScene() {
       trail.update()
     },
     render: function () {
-      stars.render()
       trail.render()
       scoreUI.render()
       if (showCollisionBoundaries) {
