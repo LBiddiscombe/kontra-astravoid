@@ -7,7 +7,7 @@ function clearCollisionBoundaries() {
   collisionBoundaries = []
 }
 
-const addCollisionCircle = (x, y, r) => {
+const addDebugCollisionCircle = (x, y, r) => {
   const circle = Sprite({
     x: x,
     y: y,
@@ -30,7 +30,7 @@ function checkCollision(asteroid, pointer) {
   const radii = radius + 20
 
   if (showCollisionBoundaries) {
-    if (type === 'circle') addCollisionCircle(x, y, radius)
+    if (type === 'circle') addDebugCollisionCircle(x, y, radius)
   }
 
   return distX * distX + distY * distY <= radii * radii

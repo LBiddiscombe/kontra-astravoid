@@ -1,12 +1,10 @@
-import { Sprite, SpriteSheet, getCanvas, load, imageAssets, setImagePath, degToRad, randInt } from 'kontra'
+import { Sprite, SpriteSheet, getCanvas, imageAssets, degToRad, randInt } from 'kontra'
 import { sample } from './logic'
 
 let spriteSheet
 let asteroids = []
 
-setImagePath('/assets')
-
-load('asteroid_spritesheet.png').then(() => {
+const loadSpriteSheet = () => {
   spriteSheet = SpriteSheet({
     image: imageAssets['asteroid_spritesheet'],
     frameWidth: 128,
@@ -22,15 +20,15 @@ load('asteroid_spritesheet.png').then(() => {
       },
     },
   })
-
-  addAsteroid(spriteSheet)
-})
+}
 
 export function clearAsteroids() {
   asteroids = []
 }
 
 export function addAsteroid() {
+  if (!spriteSheet) loadSpriteSheet()
+
   const canvas = getCanvas()
   const radius = randInt(16, canvas.width / 8)
   const asteroid = Sprite({

@@ -1,5 +1,6 @@
 import './style.css'
 import { init, initPointer, on, GameLoop } from 'kontra'
+import { createBootScene } from './scenes/bootScene'
 import { createMenuScene } from './scenes/menuScene'
 import { createGameScene } from './scenes/game/gameScene'
 import { createGameOverScene } from './scenes/gameOverScene'
@@ -15,16 +16,15 @@ initPointer()
 // #endregion
 
 // #region Scenes
-const menuScene = createMenuScene()
-const gameOverScene = createGameOverScene()
-let currentScene = menuScene
+const bootScene = createBootScene()
+let currentScene = bootScene
 currentScene.show()
 
 on('navigate', (name) => {
   switch (name) {
     case 'menu':
-      currentScene.hide()
-      currentScene = menuScene
+      currentScene.destroy()
+      currentScene = createMenuScene()
       break
     case 'game':
       currentScene.destroy()
@@ -32,7 +32,7 @@ on('navigate', (name) => {
       break
     case 'gameOver':
       currentScene.destroy()
-      currentScene = gameOverScene
+      currentScene = createGameOverScene()
       break
   }
   currentScene.show()
