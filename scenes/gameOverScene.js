@@ -6,19 +6,19 @@ export function createGameOverScene() {
   let lose = Text({
     text: 'Game Over',
     color: 'tomato',
-    font: '32px sans-serif',
+    font: '32px Nova Mono, monospaced',
   })
 
   let score = Text({
     text: '',
     color: '#bada55',
-    font: '32px sans-serif',
+    font: '32px Nova Mono, monospaced',
   })
 
   let hiscore = Text({
     text: '',
     color: '#bada55',
-    font: '16px sans-serif',
+    font: '16px Nova Mono, monospaced',
   })
 
   let loseGrid = Grid({

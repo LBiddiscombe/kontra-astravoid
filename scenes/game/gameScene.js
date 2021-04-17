@@ -13,7 +13,7 @@ export function createGameScene() {
     x: 10,
     y: 10,
     color: 'white',
-    font: '32px sans-serif',
+    font: '32px Nova Mono, monospaced',
   })
 
   function youLose() {
