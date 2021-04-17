@@ -1,7 +1,8 @@
-import { Text, Grid, Scene, getCanvas, emit, getStoreItem, onPointerDown } from 'kontra'
+import { Text, Grid, Scene, getCanvas, on, emit, getStoreItem, onPointerDown } from 'kontra'
 
 export function createMenuScene() {
   const canvas = getCanvas()
+  let isStartEnabled = true
 
   let title = Text({
     text: document.title,
@@ -48,6 +49,8 @@ export function createMenuScene() {
   })
 
   onPointerDown(function () {
+    if (!isStartEnabled) return
+    isStartEnabled = false // disable until we show the menu scene again
     emit('navigate', 'game')
   })
 
@@ -58,5 +61,6 @@ export function createMenuScene() {
       lastScore.text = `Last Score: ${getStoreItem('score') || 0}`
       hiScore.text = `Hi-Score: ${getStoreItem('hiscore') || 0}`
     },
+    onHide: function () {},
   })
 }

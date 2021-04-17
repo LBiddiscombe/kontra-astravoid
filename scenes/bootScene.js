@@ -2,7 +2,7 @@ import { getCanvas, Sprite, Text, Grid, Scene, load, setImagePath, on, emit } fr
 
 export function createBootScene() {
   const canvas = getCanvas()
-  let assets = ['asteroid1Spritesheet.png']
+  let assets = ['asteroid1Spritesheet.png', 'playerShip.png']
 
   setImagePath('/assets')
 

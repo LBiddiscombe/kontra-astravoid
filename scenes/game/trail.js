@@ -5,20 +5,20 @@ let trail = Pool({
   create: Sprite,
 })
 
-function addToTrail(pointer) {
+function addToTrail(player) {
   trail.get({
-    x: pointer.x,
-    y: pointer.y,
-    dx: randInt(-3, 3),
+    x: player.x,
+    y: player.y + player.radius,
+    dx: randInt(-2, 2),
     dy: randInt(5, 10),
     anchor: { x: 0.5, y: 0.5 },
-    height: randInt(10, 30),
-    color: sample(['yellow', 'red', 'orange', 'white', 'blue']),
+    height: randInt(5, 10),
+    color: sample(['white', 'lightgrey', 'yellow', 'red', 'orange']),
     ttl: 30,
     update: function () {
       this.advance()
       this.width = this.height
-      this.opacity = this.ttl / 60
+      this.opacity = this.ttl / 30
     },
   })
 }

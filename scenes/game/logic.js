@@ -23,11 +23,11 @@ const addDebugCollisionCircle = (x, y, r) => {
   collisionBoundaries.push(circle)
 }
 
-function checkCollision(asteroid, pointer) {
+function checkCollision(asteroid, player) {
   const { type, x, y, radius } = asteroid.collisionBoundary
-  const distX = pointer.x - x
-  const distY = pointer.y - y
-  const radii = radius + 20
+  const distX = player.x - x
+  const distY = player.y - y
+  const radii = radius + player.radius
 
   if (showCollisionBoundaries) {
     if (type === 'circle') addDebugCollisionCircle(x, y, radius)

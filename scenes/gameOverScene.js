@@ -2,6 +2,7 @@ import { Text, Grid, Scene, getCanvas, emit, getStoreItem } from 'kontra'
 
 export function createGameOverScene() {
   const canvas = getCanvas()
+  let timer
 
   let lose = Text({
     text: 'Game Over',
@@ -33,10 +34,13 @@ export function createGameOverScene() {
   return Scene({
     id: 'gameOver',
     children: [loseGrid],
+    onHide: function () {
+      clearTimeout(timer)
+    },
     onShow: function () {
       score.text = `Score: ${getStoreItem('score')}`
       hiscore.text = `Hi-Score: ${getStoreItem('hiscore')}`
-      setTimeout(() => {
+      timer = setTimeout(() => {
         emit('navigate', 'menu')
       }, 2000)
     },

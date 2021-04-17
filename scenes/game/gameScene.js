@@ -1,4 +1,4 @@
-import { Scene, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
+import { Scene, Sprite, imageAssets, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
@@ -7,6 +7,24 @@ import { addToTrail, trail } from './trail'
 export function createGameScene() {
   const pointer = getPointer()
   let asteroidFrequency = 1
+
+  let player = Sprite({
+    anchor: { x: 0.5, y: 0.5 },
+    radius: 20,
+    image: imageAssets['playerShip'],
+    update: function () {
+      this.advance()
+      this.x = pointer.x
+      this.y = pointer.y - 50
+      // add a collision boundary, used for collision detection
+      this.collisionBoundary = {
+        type: 'circle',
+        x: this.x,
+        y: this.y,
+        radius: this.radius, // bring collision boundary in to give a little leeway
+      }
+    },
+  })
 
   let scoreUI = Text({
     value: 0,
@@ -38,10 +56,12 @@ export function createGameScene() {
     },
     update: function () {
       this.advance()
+      player.update()
       // check if pointer collides with sprite
       if (showCollisionBoundaries) clearCollisionBoundaries()
       asteroids.forEach((asteroid) => {
-        if (checkCollision(asteroid, pointer)) {
+        asteroid.update()
+        if (checkCollision(asteroid, player)) {
           youLose()
         }
       })
@@ -49,7 +69,6 @@ export function createGameScene() {
       if (this.timer > asteroidFrequency) {
         this.timer = 0
         addAsteroid()
-        scene.children = asteroids
         asteroidFrequency = Math.max(asteroidFrequency - Math.random() / 50, minAsteroidFrequency)
       }
 
@@ -57,17 +76,21 @@ export function createGameScene() {
       scoreUI.value += 1
       scoreUI.text = 'Score: ' + scoreUI.value
 
-      addToTrail(pointer)
+      addToTrail(player)
       trail.update()
     },
     render: function () {
+      asteroids.forEach((asteroid) => {
+        asteroid.render()
+      })
       trail.render()
-      scoreUI.render()
+      player.render()
       if (showCollisionBoundaries) {
         collisionBoundaries.forEach((collisionBoundary) => {
           collisionBoundary.render()
         })
       }
+      scoreUI.render()
     },
   })
 
