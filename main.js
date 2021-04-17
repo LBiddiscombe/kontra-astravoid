@@ -9,7 +9,7 @@ import { createStars } from './shared/stars'
 // #region Canvas
 const { canvas } = init()
 canvas.width = Math.min(window.innerWidth, 768)
-canvas.height = window.innerHeight //(canvas.width / 2) * 3
+canvas.height = window.innerHeight
 // #endregion
 
 // #region Controls
@@ -23,20 +23,21 @@ let currentScene = bootScene
 currentScene.show()
 
 on('navigate', (name) => {
+  currentScene.hide()
+  currentScene.destroy()
+
   switch (name) {
     case 'menu':
-      currentScene.destroy()
       currentScene = createMenuScene()
       break
     case 'game':
-      currentScene.destroy()
       currentScene = createGameScene()
       break
     case 'gameOver':
-      currentScene.destroy()
       currentScene = createGameOverScene()
       break
   }
+
   currentScene.show()
 })
 // #endregion

@@ -9,7 +9,7 @@ export function createBootScene() {
   let loadingText = Text({
     color: '#FF7F00',
     text: 'Loading...',
-    font: '18px sans-serif',
+    font: '18px monospace',
     anchor: { x: 0.5, y: 0.5 },
   })
 
@@ -29,8 +29,6 @@ export function createBootScene() {
   let grid = Grid({
     x: canvas.width / 2,
     y: canvas.height / 2,
-
-    // put extra space between the button and progress bar
     rowGap: 4,
     anchor: { x: 0.5, y: 0.5 },
     children: [loadingText, loadingBar],

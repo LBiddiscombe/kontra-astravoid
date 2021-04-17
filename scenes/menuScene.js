@@ -14,31 +14,37 @@ export function createMenuScene() {
 
   let tapToStart = Text({
     text: 'Hold finger down',
-    color: '#bada55',
-    font: '32px Nova Round, monospace',
+    color: 'lawngreen',
+    font: 'bold 32px Nova Round, monospace',
     anchor: { x: 0.5, y: 0.5 },
   })
 
   let instructions = Text({
-    text: "Hold finger down. Don't lift. Avoid the asteroids.",
+    text: "Don't lift. Avoid the asteroids. Be a hero.",
     color: 'lightgrey',
     font: '16px Nova Round, monospace',
     anchor: { x: 0.5, y: 0.5 },
   })
 
-  let scores = Text({
+  let lastScore = Text({
     text: 'Last Score',
-    color: 'yellow',
+    color: 'lightgrey',
+    font: '24px Nova Mono, monospace',
+  })
+
+  let hiScore = Text({
+    text: 'Hi Score',
+    color: 'gold',
     font: '24px Nova Mono, monospace',
   })
 
   let menu = Grid({
     x: canvas.width / 2,
-    y: canvas.height / 2,
+    y: canvas.height / 3,
     anchor: { x: 0.5, y: 0.5 },
     rowGap: [16, 64],
     justify: 'center',
-    children: [tapToStart, instructions, scores],
+    children: [tapToStart, instructions, lastScore, hiScore],
   })
 
   onPointerDown(function () {
@@ -49,7 +55,8 @@ export function createMenuScene() {
     id: 'menu',
     children: [title, menu],
     onShow: function () {
-      scores.text = `Last Score: ${getStoreItem('score') || 0}\nHi-Score: ${getStoreItem('hiscore') || 0}`
+      lastScore.text = `Last Score: ${getStoreItem('score') || 0}`
+      hiScore.text = `Hi-Score: ${getStoreItem('hiscore') || 0}`
     },
   })
 }
