@@ -51,9 +51,9 @@ export function createGameScene() {
       })
       this.timer += 1 / 60
       if (this.timer > asteroidFrequency) {
+        this.timer = 0
         addAsteroid()
         scene.children = asteroids
-        this.timer = 0
         asteroidFrequency = Math.max(asteroidFrequency - Math.random() / 50, minAsteroidFrequency)
       }
 
