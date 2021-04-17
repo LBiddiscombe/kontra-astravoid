@@ -7,6 +7,7 @@
     "serve": "vite preview"
   },
   "devDependencies": {
+    "rollup-plugin-visualizer": "^5.3.6",
     "vite": "^2.1.5"
   },
   "dependencies": {
