@@ -15,21 +15,21 @@ export function createMenuScene() {
   let tapToStart = Text({
     text: 'Hold finger down',
     color: '#bada55',
-    font: '32px Nova Round, monospaced',
+    font: '32px Nova Round, monospace',
     anchor: { x: 0.5, y: 0.5 },
   })
 
   let instructions = Text({
     text: "Hold finger down. Don't lift. Avoid the asteroids.",
     color: 'lightgrey',
-    font: '16px Nova Round, monospaced',
+    font: '16px Nova Round, monospace',
     anchor: { x: 0.5, y: 0.5 },
   })
 
   let scores = Text({
     text: 'Last Score',
     color: 'yellow',
-    font: '24px Nova Mono, monospaced',
+    font: '24px Nova Mono, monospace',
   })
 
   let menu = Grid({
