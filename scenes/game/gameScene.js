@@ -1,13 +1,13 @@
 import { Scene, Sprite, Pool, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
 import { createStars } from '../../objects/stars'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
-import { showCollisionBoundary, minFrequency } from './config'
+import { showCollisionBoundaries, minAsteroidFrequency } from './config'
+import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
 
 export function createGameScene() {
   const pointer = getPointer()
   const stars = createStars()
-  let frequency = 1
-  let collisionBoxes = []
+  let asteroidFrequency = 1
 
   let scoreUI = Text({
     value: 0,
@@ -39,23 +39,22 @@ export function createGameScene() {
     timer: 0,
     onShow: function () {
       clearAsteroids()
-      collisionBoxes = []
     },
     update: function () {
       this.advance()
       // check if pointer collides with sprite
-      collisionBoxes = []
+      if (showCollisionBoundaries) clearCollisionBoundaries()
       asteroids.forEach((asteroid) => {
         if (checkCollision(asteroid, pointer)) {
           youLose()
         }
       })
       this.timer += 1 / 60
-      if (this.timer > frequency) {
+      if (this.timer > asteroidFrequency) {
         addAsteroid()
         scene.children = asteroids
         this.timer = 0
-        frequency = Math.max(frequency - Math.random() / 50, minFrequency)
+        asteroidFrequency = Math.max(asteroidFrequency - Math.random() / 50, minAsteroidFrequency)
       }
 
       // update score
@@ -87,46 +86,13 @@ export function createGameScene() {
       stars.render()
       trail.render()
       scoreUI.render()
-      if (showCollisionBoundary) {
-        addCollisionBox(pointer.x, pointer.y, 20)
-        collisionBoxes.forEach((collisionBox) => {
-          collisionBox.render()
+      if (showCollisionBoundaries) {
+        collisionBoundaries.forEach((collisionBoundary) => {
+          collisionBoundary.render()
         })
       }
     },
   })
-
-  const addCollisionBox = (x, y, r) => {
-    const box = Sprite({
-      x: x,
-      y: y,
-      r: r,
-      render: function () {
-        this.context.strokeStyle = 'red'
-        this.context.lineWidth = 2
-        this.context.beginPath()
-        this.context.arc(0, 0, r, 0, 2 * Math.PI)
-        this.context.stroke()
-      },
-    })
-    collisionBoxes.push(box)
-  }
-
-  function checkCollision(asteroid, pointer) {
-    const asteroidX = asteroid.x + asteroid.dx
-    const asteroidY = asteroid.y + asteroid.dy
-    const asteroidRadius = asteroid.radius * 0.75
-    const distX = pointer.x - asteroid.x
-    const distY = pointer.y - asteroid.y
-    const radii = asteroidRadius + 20
-
-    if (showCollisionBoundary) {
-      console.log('add collision box')
-      addCollisionBox(asteroidX, asteroidY, asteroidRadius)
-    }
-
-    return distX * distX + distY * distY <= radii * radii
-  }
 
   return scene
 }

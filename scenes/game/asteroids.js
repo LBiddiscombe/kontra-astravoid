@@ -46,19 +46,20 @@ export function addAsteroid() {
     animations: spriteSheet.animations,
     ttl: Infinity,
     update: function () {
+      this.advance()
+
       // set dx and dy based on angle and speed (velocity)
       const angleRadians = degToRad(this.angle)
       this.dx = Math.cos(angleRadians) * this.speed
       this.dy = Math.sin(angleRadians) * this.speed
 
+      // add a collision boundary, used for collision detection
       this.collisionBoundary = {
         type: 'circle',
-        x: this.x,
-        y: this.y,
+        x: this.x + this.dx,
+        y: this.y + this.dy,
         radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
       }
-
-      this.advance()
 
       // destroy asteroids out of bounds
       if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {

@@ -1,2 +1,2 @@
-export const showCollisionBoundary = true
-export const minFrequency = 0.2
+export const showCollisionBoundaries = false
+export const minAsteroidFrequency = 0.2
