@@ -1,5 +1,4 @@
 import { Sprite, SpriteSheet, getCanvas, imageAssets, degToRad, randInt } from 'kontra'
-import { sample } from './logic'
 
 let spriteSheet
 let asteroids = []
