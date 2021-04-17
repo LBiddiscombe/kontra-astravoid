@@ -1,7 +1,7 @@
 import './style.css'
 import { init, initPointer, on, GameLoop } from 'kontra'
 import { createMenuScene } from './scenes/menuScene'
-import { createGameScene } from './scenes/gameScene'
+import { createGameScene } from './scenes/game'
 import { createGameOverScene } from './scenes/gameOverScene'
 
 // #region Canvas
