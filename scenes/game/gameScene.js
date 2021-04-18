@@ -1,4 +1,15 @@
-import { Scene, Sprite, imageAssets, getPointer, onPointerUp, emit, Text, setStoreItem, getStoreItem } from 'kontra'
+import {
+  Scene,
+  Sprite,
+  imageAssets,
+  getPointer,
+  onPointerUp,
+  emit,
+  Text,
+  setStoreItem,
+  getStoreItem,
+  angleToTarget,
+} from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
@@ -13,6 +24,7 @@ export function createGameScene() {
     radius: 20,
     image: imageAssets['playerShip'],
     update: function () {
+      this.rotation = angleToTarget(pointer, this) * -2
       this.advance()
       this.x = pointer.x
       this.y = pointer.y - 50

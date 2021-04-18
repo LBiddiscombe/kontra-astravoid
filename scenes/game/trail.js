@@ -8,7 +8,7 @@ let trail = Pool({
 function addToTrail(player) {
   trail.get({
     x: player.x,
-    y: player.y + player.radius,
+    y: player.y + player.radius / 1.5,
     dx: randInt(-2, 2),
     dy: randInt(5, 10),
     anchor: { x: 0.5, y: 0.5 },
