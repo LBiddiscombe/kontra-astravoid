@@ -14,10 +14,12 @@ import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
 import { addToTrail, trail } from './trail'
+import { oscillator, timestamp } from '../../shared/helpers'
 
 export function createGameScene() {
   const pointer = getPointer()
   let asteroidFrequency = 1
+  let start = timestamp()
 
   let player = Sprite({
     anchor: { x: 0.5, y: 0.5 },
@@ -81,7 +83,10 @@ export function createGameScene() {
       if (this.timer > asteroidFrequency) {
         this.timer = 0
         addAsteroid()
-        asteroidFrequency = Math.max(asteroidFrequency - Math.random() / 50, minAsteroidFrequency)
+        asteroidFrequency = Math.max(
+          oscillator(timestamp() - start, { duration: 10000, offset: 0.5 }),
+          minAsteroidFrequency
+        )
       }
 
       // update score

@@ -1,5 +1,5 @@
 import { Pool, Sprite, randInt } from 'kontra'
-import { sample } from './logic'
+import { choose } from '../../shared/helpers'
 
 let trail = Pool({
   create: Sprite,
@@ -13,7 +13,7 @@ function addToTrail(player) {
     dy: randInt(5, 10),
     anchor: { x: 0.5, y: 0.5 },
     height: randInt(5, 10),
-    color: sample(['white', 'lightgrey', 'yellow', 'red', 'orange']),
+    color: choose(['white', 'lightgrey', 'yellow', 'red', 'orange']),
     ttl: 30,
     update: function () {
       this.advance()

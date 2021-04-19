@@ -36,8 +36,4 @@ function checkCollision(asteroid, player) {
   return distX * distX + distY * distY <= radii * radii
 }
 
-function sample(array) {
-  return array[Math.floor(Math.random() * array.length)]
-}
-
-export { collisionBoundaries, sample, checkCollision, clearCollisionBoundaries }
+export { collisionBoundaries, checkCollision, clearCollisionBoundaries }
