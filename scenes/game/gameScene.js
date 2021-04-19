@@ -14,7 +14,7 @@ import {
 } from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
-import { collisionBoundaries, checkCollision, clearCollisionBoundaries, addDebugCollisionCircle } from './logic'
+import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
 import { addToTrail, trail } from './trail'
 import { oscillator, timestamp } from '../../shared/helpers'
 
@@ -80,7 +80,6 @@ export function createGameScene() {
       player.update()
       // check if pointer collides with sprite
       if (showCollisionBoundaries) clearCollisionBoundaries()
-      addDebugCollisionCircle(player.collisionBoundary.x, player.collisionBoundary.y, player.collisionBoundary.radius)
       asteroids.forEach((asteroid) => {
         asteroid.update()
         if (checkCollision(asteroid, player)) {

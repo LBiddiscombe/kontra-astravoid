@@ -1,39 +1,64 @@
 import { Sprite } from 'kontra'
 import { showCollisionBoundaries } from './config'
 
+let collisionBoundariesSet = new Set()
 let collisionBoundaries = []
 
 function clearCollisionBoundaries() {
+  collisionBoundariesSet.clear()
   collisionBoundaries = []
 }
 
-const addDebugCollisionCircle = (x, y, r) => {
-  const circle = Sprite({
-    x: x,
-    y: y,
-    r: r,
-    render: function () {
-      this.context.strokeStyle = 'red'
-      this.context.lineWidth = 2
-      this.context.beginPath()
-      this.context.arc(0, 0, r, 0, 2 * Math.PI)
-      this.context.stroke()
-    },
-  })
-  collisionBoundaries.push(circle)
+const addDebugCollisionBoundary = (sprite) => {
+  if (collisionBoundariesSet.has(sprite)) return
+  let boundary
+  if (sprite.collisionBoundary.type === 'circle') {
+    boundary = Sprite({
+      x: sprite.collisionBoundary.x,
+      y: sprite.collisionBoundary.y,
+      r: sprite.collisionBoundary.radius,
+      render: function () {
+        this.context.strokeStyle = 'red'
+        this.context.lineWidth = 2
+        this.context.beginPath()
+        this.context.arc(0, 0, this.r, 0, 2 * Math.PI)
+        this.context.stroke()
+      },
+    })
+  }
+  if (sprite.type === 'box') {
+    boundary = Sprite({
+      x: sprite.collisionBoundary.x,
+      y: sprite.collisionBoundary.y,
+      width: sprite.collisionBoundary.width,
+      height: sprite.collisionBoundary.height,
+      render: function () {
+        this.context.strokeStyle = 'red'
+        this.context.lineWidth = 2
+        this.context.beginPath()
+        this.context.rect(this.x, this.y, this.width, this.height)
+        this.context.stroke()
+      },
+    })
+  }
+  collisionBoundariesSet.add(sprite)
+  if (boundary) {
+    collisionBoundaries.push(boundary)
+  }
 }
 
-function checkCollision(asteroid, player) {
-  const { type, x, y, radius } = asteroid.collisionBoundary
-  const distX = player.x - x
-  const distY = player.y - y
-  const radii = radius + player.radius
-
+function checkCollision(enemy, player) {
   if (showCollisionBoundaries) {
-    if (type === 'circle') addDebugCollisionCircle(x, y, radius)
+    addDebugCollisionBoundary(enemy)
+    addDebugCollisionBoundary(player)
   }
+
+  const { x, y, radius } = enemy.collisionBoundary
+  const distX = player.collisionBoundary.x - x
+  const distY = player.collisionBoundary.y - y
+  const radii = radius + player.collisionBoundary.radius
 
   return distX * distX + distY * distY <= radii * radii
 }
 
-export { collisionBoundaries, checkCollision, clearCollisionBoundaries, addDebugCollisionCircle }
+export { collisionBoundaries, checkCollision, clearCollisionBoundaries }
