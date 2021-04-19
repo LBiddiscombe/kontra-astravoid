@@ -9,7 +9,7 @@ function addToTrail(player) {
   trail.get({
     x: player.x,
     y: player.y + player.radius / 1.5,
-    dx: randInt(-2, 2),
+    dx: Math.random() * 1.5 - Math.random() * 1.5,
     dy: randInt(5, 10),
     anchor: { x: 0.5, y: 0.5 },
     height: randInt(5, 10),

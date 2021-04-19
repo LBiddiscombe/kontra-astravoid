@@ -34,7 +34,7 @@ export function addAsteroid() {
     height: radius * 2,
     anchor: { x: 0.5, y: 0.5 },
     rotation: Math.random() * 2 - Math.random() * 2,
-    angle: randInt(70, 110),
+    angle: randInt(60, 120),
     speed: Math.random() * 8 + 2,
     animations: spriteSheet.animations,
     ttl: Infinity,
