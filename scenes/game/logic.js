@@ -36,4 +36,4 @@ function checkCollision(asteroid, player) {
   return distX * distX + distY * distY <= radii * radii
 }
 
-export { collisionBoundaries, checkCollision, clearCollisionBoundaries }
+export { collisionBoundaries, checkCollision, clearCollisionBoundaries, addDebugCollisionCircle }
