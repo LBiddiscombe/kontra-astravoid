@@ -13,6 +13,24 @@ export function createBootScene() {
     anchor: { x: 0.5, y: 0.5 },
   })
 
+  let preloadFont1 = Text({
+    color: '#FF7F00',
+    font: '18px Nova Round',
+    anchor: { x: 0.5, y: 0.5 },
+  })
+
+  let preloadFont2 = Text({
+    color: '#FF7F00',
+    font: '18px Nova Mono',
+    anchor: { x: 0.5, y: 0.5 },
+  })
+
+  let preloadFont3 = Text({
+    color: '#FF7F00',
+    font: '48px Faster One',
+    anchor: { x: 0.5, y: 0.5 },
+  })
+
   let loadingBar = Sprite({
     width: canvas.width / 2,
     height: 30,
@@ -31,7 +49,7 @@ export function createBootScene() {
     y: canvas.height / 2,
     rowGap: 4,
     anchor: { x: 0.5, y: 0.5 },
-    children: [loadingText, loadingBar],
+    children: [loadingText, loadingBar, preloadFont1, preloadFont2, preloadFont3],
   })
 
   const bootScene = Scene({
