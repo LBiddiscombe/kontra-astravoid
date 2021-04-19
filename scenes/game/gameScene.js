@@ -3,20 +3,23 @@ import {
   Sprite,
   imageAssets,
   getPointer,
-  onPointerUp,
   emit,
   Text,
   setStoreItem,
   getStoreItem,
   angleToTarget,
+  track,
+  untrack,
+  getCanvas,
 } from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
-import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
+import { collisionBoundaries, checkCollision, clearCollisionBoundaries, addDebugCollisionCircle } from './logic'
 import { addToTrail, trail } from './trail'
 import { oscillator, timestamp } from '../../shared/helpers'
 
 export function createGameScene() {
+  const canvas = getCanvas()
   const pointer = getPointer()
   let asteroidFrequency = 1
   let start = timestamp()
@@ -35,7 +38,7 @@ export function createGameScene() {
         type: 'circle',
         x: this.x,
         y: this.y,
-        radius: this.radius, // bring collision boundary in to give a little leeway
+        radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
       }
     },
   })
@@ -56,23 +59,28 @@ export function createGameScene() {
     emit('navigate', 'gameOver')
   }
 
-  onPointerUp(function () {
-    youLose()
-  })
-
   let scene = Scene({
     id: 'game',
+    width: canvas.width,
+    height: canvas.height,
     cullObjects: false,
     timer: 0,
     onShow: function () {
       clearAsteroids()
       trail.clear()
     },
+    onHide: function () {
+      untrack(scene)
+    },
+    onUp: function () {
+      youLose()
+    },
     update: function () {
       this.advance()
       player.update()
       // check if pointer collides with sprite
       if (showCollisionBoundaries) clearCollisionBoundaries()
+      addDebugCollisionCircle(player.collisionBoundary.x, player.collisionBoundary.y, player.collisionBoundary.radius)
       asteroids.forEach((asteroid) => {
         asteroid.update()
         if (checkCollision(asteroid, player)) {
@@ -110,6 +118,8 @@ export function createGameScene() {
       scoreUI.render()
     },
   })
+
+  track(scene)
 
   return scene
 }
