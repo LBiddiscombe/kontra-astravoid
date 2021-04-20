@@ -22,9 +22,6 @@ function createPlayer() {
         radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
       }
     },
-    render: function () {
-      this.draw()
-    },
   })
 
   function emitTrail() {
@@ -38,10 +35,10 @@ function createPlayer() {
       color: choose(['silver', 'lightgrey', 'yellow', 'red', 'orange']),
       ttl: 30,
       update: function () {
+        this.advance()
         const angleRadians = degToRad(this.angle) + player.rotation
         this.dx = Math.cos(angleRadians) * this.speed
         this.dy = Math.sin(angleRadians) * this.speed
-        this.advance()
         this.width = this.height
         this.opacity = this.ttl / 30
       },
