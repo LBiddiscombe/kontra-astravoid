@@ -48,9 +48,6 @@ export function addAsteroid() {
 
       // add a collision boundary, used for collision detection
       this.collisionBoundary = {
-        type: 'circle',
-        x: this.x,
-        y: this.y,
         radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
       }
 
