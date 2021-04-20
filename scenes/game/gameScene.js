@@ -1,47 +1,15 @@
-import {
-  Scene,
-  Sprite,
-  imageAssets,
-  getPointer,
-  emit,
-  Text,
-  setStoreItem,
-  getStoreItem,
-  angleToTarget,
-  track,
-  untrack,
-  getCanvas,
-} from 'kontra'
+import { Scene, emit, Text, setStoreItem, getStoreItem, track, untrack, getCanvas } from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
 import { showCollisionBoundaries, minAsteroidFrequency } from './config'
 import { collisionBoundaries, checkCollision, clearCollisionBoundaries } from './logic'
-import { addToTrail, trail } from './trail'
+import { createPlayer } from './player'
 import { oscillator, timestamp } from '../../shared/helpers'
 
 export function createGameScene() {
   const canvas = getCanvas()
-  const pointer = getPointer()
+  let [player, trail] = createPlayer()
   let asteroidFrequency = 1
   let start = timestamp()
-
-  let player = Sprite({
-    anchor: { x: 0.5, y: 0.5 },
-    radius: 20,
-    image: imageAssets['playerShip'],
-    update: function () {
-      this.rotation = angleToTarget(pointer, this) * -2
-      this.advance()
-      this.x = pointer.x
-      this.y = pointer.y - 50
-      // add a collision boundary, used for collision detection
-      this.collisionBoundary = {
-        type: 'circle',
-        x: this.x,
-        y: this.y,
-        radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
-      }
-    },
-  })
 
   let scoreUI = Text({
     value: 0,
@@ -67,7 +35,6 @@ export function createGameScene() {
     timer: 0,
     onShow: function () {
       clearAsteroids()
-      trail.clear()
     },
     onHide: function () {
       untrack(scene)
@@ -78,6 +45,8 @@ export function createGameScene() {
     update: function () {
       this.advance()
       player.update()
+      trail.update()
+
       // check if pointer collides with sprite
       if (showCollisionBoundaries) clearCollisionBoundaries()
       asteroids.forEach((asteroid) => {
@@ -86,6 +55,8 @@ export function createGameScene() {
           youLose()
         }
       })
+
+      // spawn new asteroids in waves
       this.timer += 1 / 60
       if (this.timer > asteroidFrequency) {
         this.timer = 0
@@ -99,16 +70,14 @@ export function createGameScene() {
       // update score
       scoreUI.value += 1
       scoreUI.text = 'Score: ' + scoreUI.value
-
-      addToTrail(player)
-      trail.update()
     },
     render: function () {
+      player.render()
+      trail.render()
       asteroids.forEach((asteroid) => {
         asteroid.render()
       })
-      trail.render()
-      player.render()
+
       if (showCollisionBoundaries) {
         collisionBoundaries.forEach((collisionBoundary) => {
           collisionBoundary.render()
