@@ -34,6 +34,9 @@ export function addAsteroid() {
     height: radius * 2,
     anchor: { x: 0.5, y: 0.5 },
     rotation: Math.random() * 2 - Math.random() * 2,
+    collider: {
+      radius: radius * 0.75, // bring collision boundary in to give a little leeway
+    },
     angle: randInt(60, 120),
     speed: Math.random() * 8 + 2,
     animations: spriteSheet.animations,
@@ -46,11 +49,6 @@ export function addAsteroid() {
       this.dx = Math.cos(angleRadians) * this.speed
       this.dy = Math.sin(angleRadians) * this.speed
 
-      // add a collision boundary, used for collision detection
-      this.collisionBoundary = {
-        radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
-      }
-
       // destroy asteroids out of bounds
       if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {
         this.ttl = 0
@@ -58,7 +56,7 @@ export function addAsteroid() {
     },
   })
   asteroids.push(asteroid)
-  asteroids = asteroids.filter((a) => a.ttl > 0)
+  asteroids = asteroids.filter((a) => a.isAlive())
 }
 
 export { asteroids }

@@ -1,7 +1,7 @@
-import { Scene, emit, Text, setStoreItem, getStoreItem, track, untrack, getCanvas } from 'kontra'
+import { Scene, Text, emit, setStoreItem, getStoreItem, track, untrack, getCanvas } from 'kontra'
 import { asteroids, clearAsteroids, addAsteroid } from './asteroids'
-import { showCollisionBoundaries, minAsteroidFrequency } from './config'
-import { checkCollision, drawCollisionBoundary } from './logic'
+import { debugColliders, minAsteroidFrequency } from './config'
+import { checkCollision, drawColliders } from './logic'
 import { createPlayer } from './player'
 import { oscillator, timestamp } from '../../shared/helpers'
 
@@ -31,7 +31,6 @@ export function createGameScene() {
     id: 'game',
     width: canvas.width,
     height: canvas.height,
-    cullObjects: false,
     timer: 0,
     onShow: function () {
       clearAsteroids()
@@ -72,11 +71,11 @@ export function createGameScene() {
     },
     render: function () {
       player.render()
-      if (showCollisionBoundaries) drawCollisionBoundary(player)
+      if (debugColliders) drawColliders(player)
       trail.render()
       asteroids.forEach((asteroid) => {
         asteroid.render()
-        if (showCollisionBoundaries) drawCollisionBoundary(asteroid)
+        if (debugColliders) drawColliders(asteroid)
       })
 
       scoreUI.render()

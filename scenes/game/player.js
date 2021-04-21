@@ -7,20 +7,20 @@ function createPlayer() {
   })
 
   const pointer = getPointer()
+  const radius = 20
   let player = Sprite({
     anchor: { x: 0.5, y: 0.5 },
-    radius: 20,
+    radius: radius,
     image: imageAssets['playerShip'],
+    collider: {
+      radius: radius * 0.75, // bring collision boundary in to give a little leeway
+    },
     update: function () {
       this.advance()
       this.rotation = angleToTarget(pointer, this) * -2
       this.x = pointer.x
       this.y = pointer.y - 50
       emitTrail()
-      // add a collision boundary, used for collision detection
-      this.collisionBoundary = {
-        radius: this.radius * 0.75, // bring collision boundary in to give a little leeway
-      }
     },
   })
 
