@@ -10,7 +10,7 @@ const loadSpriteSheet = () => {
     frameHeight: 128,
     animations: {
       spin: {
-        frames: '1..15',
+        frames: '0..15',
         frameRate: 32,
       },
     },
@@ -26,6 +26,7 @@ export function addAsteroid() {
 
   const canvas = getCanvas()
   const radius = randInt(16, canvas.width / 8)
+
   const asteroid = Sprite({
     x: Math.random() * canvas.width,
     y: -radius,
@@ -37,7 +38,7 @@ export function addAsteroid() {
       radius: radius * 0.75, // bring collision boundary in to give a little leeway
     },
     rotation: Math.random() * 2 - Math.random() * 2,
-    angle: randInt(60, 120), // direction of movement
+    angle: randInt(65, 115), // direction of movement
     speed: Math.random() * 8 + 2,
     animations: spriteSheet.animations,
     ttl: Infinity,
