@@ -33,11 +33,11 @@ export function addAsteroid() {
     width: radius * 2,
     height: radius * 2,
     anchor: { x: 0.5, y: 0.5 },
-    rotation: Math.random() * 2 - Math.random() * 2,
     collider: {
       radius: radius * 0.75, // bring collision boundary in to give a little leeway
     },
-    angle: randInt(60, 120),
+    rotation: Math.random() * 2 - Math.random() * 2,
+    angle: randInt(60, 120), // direction of movement
     speed: Math.random() * 8 + 2,
     animations: spriteSheet.animations,
     ttl: Infinity,
