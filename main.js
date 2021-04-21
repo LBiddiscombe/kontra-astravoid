@@ -6,17 +6,12 @@ import { createGameScene } from './scenes/game/gameScene'
 import { createGameOverScene } from './scenes/gameOverScene'
 import { createStars } from './shared/stars'
 
-// #region Canvas
 const { canvas } = init()
 canvas.width = Math.min(window.innerWidth, 768)
 canvas.height = window.innerHeight
-// #endregion
 
-// #region Controls
 initPointer()
-// #endregion
 
-// #region Scenes
 const stars = createStars()
 const bootScene = createBootScene()
 let currentScene = bootScene
@@ -40,9 +35,7 @@ on('navigate', (name) => {
 
   currentScene.show()
 })
-// #endregion
 
-// #region GameLoop
 let loop = GameLoop({
   update: function () {
     currentScene.update()
@@ -54,4 +47,3 @@ let loop = GameLoop({
 })
 
 loop.start()
-// #endregion
