@@ -15,7 +15,7 @@ export function createGameScene() {
     value: 0,
     x: 10,
     y: 10,
-    color: '#4deeea',
+    color: '#ffe700',
     font: 'Bold 32px Comfortaa',
     render: function () {
       this.context.shadowBlur = 8

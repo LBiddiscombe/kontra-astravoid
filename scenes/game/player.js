@@ -22,13 +22,18 @@ function createPlayer() {
       this.y = pointer.y - 50
       emitTrail()
     },
+    render: function () {
+      this.context.shadowBlur = 10
+      this.context.shadowColor = 'white'
+      this.draw()
+    },
   })
 
   function emitTrail() {
     const size = randInt(5, 10)
     trail.get({
       x: player.x,
-      y: player.y + player.radius / 1.5,
+      y: player.y + player.radius,
       angle: randInt(80, 100),
       speed: randInt(5, 10),
       anchor: { x: 0.5, y: 0.5 },
@@ -42,6 +47,11 @@ function createPlayer() {
         this.dx = Math.cos(angleRadians) * this.speed
         this.dy = Math.sin(angleRadians) * this.speed
         this.opacity = this.ttl / 30
+      },
+      render: function () {
+        this.context.shadowBlur = size
+        this.context.shadowColor = this.color
+        this.draw()
       },
     })
   }
