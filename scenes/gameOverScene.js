@@ -6,20 +6,35 @@ export function createGameOverScene() {
 
   let lose = Text({
     text: 'Game Over',
-    color: 'tomato',
-    font: 'bold 48px Nova Mono, monospace',
+    color: '#ff073a',
+    font: 'Bold 48px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 12
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let score = Text({
     text: '',
-    color: 'lightgrey',
-    font: 'bold 48px Nova Mono, monospace',
+    color: '#4deeea',
+    font: 'bold 48px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 12
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let hiscore = Text({
     text: '',
-    color: 'gold',
-    font: '24px Nova Mono, monospace',
+    color: '#ffe700',
+    font: '24px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 6
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let loseGrid = Grid({
@@ -28,7 +43,7 @@ export function createGameOverScene() {
     anchor: { x: 0.5, y: 0.5 },
     rowGap: 64,
     justify: 'center',
-    children: [lose, score],
+    children: [lose, score, hiscore],
   })
 
   return Scene({

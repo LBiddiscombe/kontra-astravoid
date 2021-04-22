@@ -7,42 +7,72 @@ export function createMenuScene() {
     text: document.title,
     x: canvas.width / 2,
     y: 50,
-    color: 'white',
-    font: '48px Faster One',
+    color: '#4deeea',
+    font: 'Bold 48px Comfortaa',
     anchor: { x: 0.5, y: 0.5 },
+    render: function () {
+      this.context.shadowBlur = 12
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let tapToStart = Text({
     text: 'Hold finger down',
-    color: 'lawngreen',
-    font: 'bold 32px Nova Round, monospace',
+    color: '#74ee15',
+    font: 'Bold 32px Comfortaa',
     anchor: { x: 0.5, y: 0.5 },
+    render: function () {
+      this.context.shadowBlur = 8
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let instructions = Text({
     text: "Don't lift. Avoid the asteroids. Be a hero.",
-    color: 'lightgrey',
-    font: '16px Nova Round, monospace',
+    color: '#4deeea',
+    font: 'Bold 16px Comfortaa',
     anchor: { x: 0.5, y: 0.5 },
+    render: function () {
+      this.context.shadowBlur = 4
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let lastScore = Text({
     text: 'Last Score',
-    color: 'lightgrey',
-    font: '24px Nova Mono, monospace',
+    color: '#4deeea',
+    font: '24px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 6
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let hiScore = Text({
     text: 'Hi Score',
-    color: 'gold',
-    font: '24px Nova Mono, monospace',
+    color: '#ffe700',
+    font: '24px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 6
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let countdown = Text({
     text: '3',
     value: 3,
-    color: 'lawngreen',
-    font: '64px Nova Mono, monospace',
+    color: '#74ee15',
+    font: '64px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 16
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   let menu = Grid({

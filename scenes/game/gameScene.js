@@ -15,8 +15,13 @@ export function createGameScene() {
     value: 0,
     x: 10,
     y: 10,
-    color: 'white',
-    font: '32px Nova Mono, monospace',
+    color: '#4deeea',
+    font: 'Bold 32px Comfortaa',
+    render: function () {
+      this.context.shadowBlur = 8
+      this.context.shadowColor = this.color
+      this.draw()
+    },
   })
 
   function youLose() {
