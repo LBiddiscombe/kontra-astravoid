@@ -11,7 +11,7 @@ function createPlayer() {
   let player = Sprite({
     anchor: { x: 0.5, y: 0.5 },
     radius: radius,
-    image: imageAssets['playerShip'],
+    image: imageAssets['rocket'],
     collider: {
       radius: radius * 0.75, // bring collision boundary in to give a little leeway
     },
@@ -39,19 +39,23 @@ function createPlayer() {
       anchor: { x: 0.5, y: 0.5 },
       height: size,
       width: size,
-      color: choose(['white', 'yellow', 'red', 'orange']),
+      //color: choose(['white', 'yellow', 'red', 'orange']),
+      color: 'white',
       ttl: 30,
       update: function () {
         this.advance()
         const angleRadians = degToRad(this.angle) + player.rotation
         this.dx = Math.cos(angleRadians) * this.speed
         this.dy = Math.sin(angleRadians) * this.speed
-        this.opacity = this.ttl / 30
+        this.opacity = this.ttl / 15
       },
       render: function () {
         this.context.shadowBlur = size
         this.context.shadowColor = this.color
-        this.draw()
+        this.context.fillStyle = this.color
+        this.context.beginPath()
+        this.context.arc(this.width / 2, this.height, this.width / 2, 0, 2 * Math.PI)
+        this.context.fill()
       },
     })
   }
