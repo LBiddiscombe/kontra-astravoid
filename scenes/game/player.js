@@ -11,7 +11,7 @@ function createPlayer() {
   let player = Sprite({
     anchor: { x: 0.5, y: 0.5 },
     radius: radius,
-    image: imageAssets['rocket'],
+    image: imageAssets['playerShip'],
     collider: {
       radius: radius * 0.75, // bring collision boundary in to give a little leeway
     },
