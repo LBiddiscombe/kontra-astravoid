@@ -51,57 +51,53 @@ export function addAsteroid() {
         this.ttl = 0
       }
 
-      // // explode asteroid if hit
-      // if (this.ttl === Infinity && this.y > canvas.height / 4) {
-      //   this.ttl = 30
-      //   this.collider.active = false
-      //   this.spinSpeed = 0
+      // explode asteroid if hit
+      if (this.ttl === Infinity && Math.random() < 0.001) {
+        this.ttl = 30
+        this.collider.active = false
+        this.spinSpeed = 0
 
-      //   for (let i = 0; i < this.nodes.length; i++) {
-      //     const angle = (i / this.nodes.length) * Math.PI * 2
-      //     const x = this.nodes[i].x
-      //     const y = this.nodes[i].y
-      //     const dx = Math.cos(angle) * asteroid.lineWidth * Math.random()
-      //     const dy = Math.sin(angle) * asteroid.lineWidth * Math.random()
+        for (let i = 0; i < this.nodes.length; i++) {
+          const angle = (i / this.nodes.length) * Math.PI * 2
+          const x = this.nodes[i].x
+          const y = this.nodes[i].y
+          const dx = Math.cos(angle) * asteroid.lineWidth * Math.random() * 2
+          const dy = Math.sin(angle) * asteroid.lineWidth * Math.random() * 2
 
-      //     explosion.get({
-      //       x,
-      //       y,
-      //       dx,
-      //       dy,
-      //       radius: asteroid.lineWidth,
-      //       anchor: { x: 0.5, y: 0.5 },
-      //       color: 'white', //choose(['white', 'yellow', 'red', 'gray']),
-      //       ttl: 30,
-      //       update: function () {
-      //         this.advance()
-      //         this.radius += Math.random() * 3
-      //         this.opacity = this.ttl / 60
-      //       },
-      //       render: function () {
-      //         this.context.fillStyle = this.color
-      //         this.context.beginPath()
-      //         this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
-      //         this.context.fill()
-      //       },
-      //     })
-      //   }
-      // }
+          explosion.get({
+            x,
+            y,
+            dx,
+            dy,
+            radius: asteroid.lineWidth * 5,
+            anchor: { x: 0.5, y: 0.5 },
+            color: 'white', //choose(['white', 'yellow', 'red', 'gray']),
+            ttl: 30,
+            update: function () {
+              this.advance()
+              this.radius += Math.random() * 3
+              this.opacity = this.ttl / 30
+            },
+            render: function () {
+              this.context.fillStyle = this.color
+              this.context.beginPath()
+              this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
+              this.context.fill()
+            },
+          })
+        }
+      }
 
       // exploding
       if (this.ttl !== Infinity) {
-        this.radius = clamp(0, radius, this.ttl * 2)
-        this.opacity = this.ttl / 60
+        this.radius -= radius / 100
+        this.opacity = clamp(0, 1, this.ttl / 60)
       }
     },
     render: function () {
       if (this.ttl === Infinity) drawAsteroid(this.context, this.nodes, this.lineWidth)
       else {
         explosion.render()
-        this.context.fillStyle = 'white'
-        this.context.beginPath()
-        this.context.arc(radius, radius, this.radius, 0, 2 * Math.PI)
-        this.context.fill()
       }
     },
   })
