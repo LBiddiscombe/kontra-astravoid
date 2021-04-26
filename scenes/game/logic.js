@@ -1,4 +1,6 @@
 function checkCollision(enemy, player) {
+  if (!enemy.collider.active || !player.collider.active) return false
+
   const distX = player.x - enemy.x
   const distY = player.y - enemy.y
   const radii = enemy.collider.radius + player.collider.radius
@@ -7,6 +9,8 @@ function checkCollision(enemy, player) {
 }
 
 function drawColliders(sprite) {
+  if (!sprite.collider.active) return
+
   // display anchor point
   sprite.context.fillStyle = 'yellow'
   sprite.context.beginPath()

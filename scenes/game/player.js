@@ -13,6 +13,7 @@ function createPlayer() {
     radius: radius,
     image: imageAssets['playerShip'],
     collider: {
+      active: true,
       radius: radius * 0.75, // bring collision boundary in to give a little leeway
     },
     update: function () {

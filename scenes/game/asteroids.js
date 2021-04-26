@@ -1,4 +1,5 @@
-import { Sprite, getCanvas, degToRad, randInt } from 'kontra'
+import { Sprite, Pool, getCanvas, degToRad, randInt, clamp } from 'kontra'
+import { choose } from '../../shared/helpers'
 
 let asteroids = []
 
@@ -14,6 +15,11 @@ export function addAsteroid() {
   const spriteY = -radius
   const nodes = createAsteroidNodes(numNodes, radius)
 
+  let explosion = Pool({
+    create: Sprite,
+    maxSize: 12,
+  })
+
   const asteroid = Sprite({
     x: spriteX,
     y: spriteY,
@@ -24,6 +30,7 @@ export function addAsteroid() {
     nodes: nodes,
     lineWidth: radius / 10,
     collider: {
+      active: true,
       radius: radius * 0.9, // bring collision boundary in to give a little leeway
     },
     angle: degToRad(randInt(65, 115)), // direction of movement
@@ -32,6 +39,7 @@ export function addAsteroid() {
     ttl: Infinity,
     update: function () {
       this.advance()
+      explosion.update()
 
       // set dx and dy based on angle and speed (velocity)
       this.dx = Math.cos(this.angle) * this.speed
@@ -42,9 +50,59 @@ export function addAsteroid() {
       if (this.y > canvas.height + this.height || this.x < 0 - this.width || this.x > canvas.width + this.width) {
         this.ttl = 0
       }
+
+      // // explode asteroid if hit
+      // if (this.ttl === Infinity && this.y > canvas.height / 4) {
+      //   this.ttl = 30
+      //   this.collider.active = false
+      //   this.spinSpeed = 0
+
+      //   for (let i = 0; i < this.nodes.length; i++) {
+      //     const angle = (i / this.nodes.length) * Math.PI * 2
+      //     const x = this.nodes[i].x
+      //     const y = this.nodes[i].y
+      //     const dx = Math.cos(angle) * asteroid.lineWidth * Math.random()
+      //     const dy = Math.sin(angle) * asteroid.lineWidth * Math.random()
+
+      //     explosion.get({
+      //       x,
+      //       y,
+      //       dx,
+      //       dy,
+      //       radius: asteroid.lineWidth,
+      //       anchor: { x: 0.5, y: 0.5 },
+      //       color: 'white', //choose(['white', 'yellow', 'red', 'gray']),
+      //       ttl: 30,
+      //       update: function () {
+      //         this.advance()
+      //         this.radius += Math.random() * 3
+      //         this.opacity = this.ttl / 60
+      //       },
+      //       render: function () {
+      //         this.context.fillStyle = this.color
+      //         this.context.beginPath()
+      //         this.context.arc(0, 0, this.radius, 0, 2 * Math.PI)
+      //         this.context.fill()
+      //       },
+      //     })
+      //   }
+      // }
+
+      // exploding
+      if (this.ttl !== Infinity) {
+        this.radius = clamp(0, radius, this.ttl * 2)
+        this.opacity = this.ttl / 60
+      }
     },
     render: function () {
-      drawAsteroid(this.context, this.nodes, this.lineWidth)
+      if (this.ttl === Infinity) drawAsteroid(this.context, this.nodes, this.lineWidth)
+      else {
+        explosion.render()
+        this.context.fillStyle = 'white'
+        this.context.beginPath()
+        this.context.arc(radius, radius, this.radius, 0, 2 * Math.PI)
+        this.context.fill()
+      }
     },
   })
   asteroids.push(asteroid)
